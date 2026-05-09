@@ -22,10 +22,28 @@ const Navbar = () => {
     { name: 'Contact', href: '#contact' },
   ];
 
-  const handleMobileClick = (href) => {
+  // Manual scroll function for mobile to ensure it works every time
+  const handleNavClick = (e, href) => {
+    e.preventDefault();
     setIsOpen(false);
-    // On some mobile browsers, navigation might be cancelled if the element is removed immediately.
-    // The scroll-behavior: smooth in CSS handles the actual movement.
+
+    // Give the menu a moment to start closing, then scroll
+    setTimeout(() => {
+      const id = href.replace('#', '');
+      const element = document.getElementById(id);
+      if (element) {
+        const offset = 80; // height of navbar
+        const bodyRect = document.body.getBoundingClientRect().top;
+        const elementRect = element.getBoundingClientRect().top;
+        const elementPosition = elementRect - bodyRect;
+        const offsetPosition = elementPosition - offset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }, 100);
   };
 
   return (
@@ -61,7 +79,6 @@ const Navbar = () => {
         <button 
           className="md:hidden text-white p-2 hover:bg-white/5 rounded-lg transition-colors" 
           onClick={() => setIsOpen(!isOpen)}
-          aria-label="Toggle Menu"
         >
           {isOpen ? <LuX className="w-7 h-7" /> : <LuMenu className="w-7 h-7" />}
         </button>
@@ -74,7 +91,6 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
             className="md:hidden bg-dark-card border-b border-dark-border overflow-hidden"
           >
             <div className="flex flex-col p-6 gap-2">
@@ -82,7 +98,7 @@ const Navbar = () => {
                 <a 
                   key={link.name}
                   href={link.href}
-                  onClick={() => handleMobileClick(link.href)}
+                  onClick={(e) => handleNavClick(e, link.href)}
                   className="text-lg font-medium text-gray-400 hover:text-white py-3 border-b border-white/5 last:border-0"
                 >
                   {link.name}
@@ -91,7 +107,7 @@ const Navbar = () => {
               <div className="pt-4">
                 <a 
                   href="#contact" 
-                  onClick={() => handleMobileClick('#contact')} 
+                  onClick={(e) => handleNavClick(e, '#contact')} 
                   className="btn-primary block text-center w-full"
                 >
                   Hire Me
