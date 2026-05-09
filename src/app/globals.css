@@ -16,6 +16,11 @@
   --foreground: #f9fafb;
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px; /* Accounts for the fixed navbar height */
+}
+
 body {
   background: var(--background);
   color: var(--foreground);

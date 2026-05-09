@@ -18,8 +18,15 @@ const Navbar = () => {
     { name: 'Skills', href: '#skills' },
     { name: 'Projects', href: '#projects' },
     { name: 'Experience', href: '#experience' },
+    { name: 'Education', href: '#education' },
     { name: 'Contact', href: '#contact' },
   ];
+
+  const handleMobileClick = (href) => {
+    setIsOpen(false);
+    // On some mobile browsers, navigation might be cancelled if the element is removed immediately.
+    // The scroll-behavior: smooth in CSS handles the actual movement.
+  };
 
   return (
     <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'py-4 bg-dark-bg/80 backdrop-blur-md border-b border-dark-border' : 'py-6 bg-transparent'}`}>
@@ -51,7 +58,11 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Toggle */}
-        <button className="md:hidden text-white" onClick={() => setIsOpen(!isOpen)}>
+        <button 
+          className="md:hidden text-white p-2 hover:bg-white/5 rounded-lg transition-colors" 
+          onClick={() => setIsOpen(!isOpen)}
+          aria-label="Toggle Menu"
+        >
           {isOpen ? <LuX className="w-7 h-7" /> : <LuMenu className="w-7 h-7" />}
         </button>
       </div>
@@ -63,20 +74,29 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
             className="md:hidden bg-dark-card border-b border-dark-border overflow-hidden"
           >
-            <div className="flex flex-col p-6 gap-4">
+            <div className="flex flex-col p-6 gap-2">
               {navLinks.map((link) => (
                 <a 
                   key={link.name}
                   href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className="text-lg font-medium text-gray-400 hover:text-white"
+                  onClick={() => handleMobileClick(link.href)}
+                  className="text-lg font-medium text-gray-400 hover:text-white py-3 border-b border-white/5 last:border-0"
                 >
                   {link.name}
                 </a>
               ))}
-              <a href="#contact" onClick={() => setIsOpen(false)} className="btn-primary text-center">Hire Me</a>
+              <div className="pt-4">
+                <a 
+                  href="#contact" 
+                  onClick={() => handleMobileClick('#contact')} 
+                  className="btn-primary block text-center w-full"
+                >
+                  Hire Me
+                </a>
+              </div>
             </div>
           </motion.div>
         )}
